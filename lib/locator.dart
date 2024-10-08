@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:lets_git_it/services/app.dart';
+import 'package:lets_git_it/service/app.dart';
 
 final sl = GetIt.instance;
 
