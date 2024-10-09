@@ -18,7 +18,7 @@ class HomeNavigator extends StatelessWidget with WatchItMixin {
     var index = watch(sl<TabNavigator>().index);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Navigator'),
+        title: const Text('Workout Tracker'),
       ),
       body: _widgetOptions.elementAt(index.value),
       bottomNavigationBar: BottomNavigationBar(
@@ -34,21 +34,22 @@ class HomeNavigator extends StatelessWidget with WatchItMixin {
           fontWeight: FontWeight.w500,
         ),
         type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home2',
+            icon: Icon(Icons.school),
+            label: 'School',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home3',
+            icon: Icon(Icons.business),
+            label: 'business',
           ),
         ],
         onTap: (value) => sl<TabNavigator>().setIndex(value),
+        currentIndex: index.value,
       ),
       
     );

@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
 import 'package:lets_git_it/model/workout.dart';
+import 'package:lets_git_it/theme.dart';
 
 var headers = [
   'dateTime',
   'workout'
 ];
 
-final legs = Workout(name: 'Legs', color: Colors.blue);
-final chest = Workout(name: 'Chest', color: Colors.red);
-final back = Workout(name: 'Back', color: Colors.green);
-final arms = Workout(name: 'Arms', color: Colors.yellow);
-final shoulders = Workout(name: 'Shoulders', color: Colors.orange);
-final rest = Workout(name: 'Rest', color: Colors.grey);
+final legs = Workout(name: 'Legs', color: colorGrid[0]);
+final chest = Workout(name: 'Chest', color: colorGrid[1]);
+final back = Workout(name: 'Back', color: colorGrid[2]);
+final arms = Workout(name: 'Arms', color: colorGrid[3]);
+final shoulders = Workout(name: 'Shoulders', color: colorGrid[4]);
+final rest = Workout(name: 'Rest', color: colorGrid[5]);
 
 var tempData = [
   // LoggedWorkout(dateTime: DateTime(2024, 1, 1, 10, 10), workout: legs),

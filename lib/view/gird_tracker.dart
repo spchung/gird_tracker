@@ -1,4 +1,5 @@
 import 'package:lets_git_it/model/workout.dart';
+import 'package:lets_git_it/theme.dart';
 
 import 'temp_data.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +36,8 @@ class GridTrackerView extends StatelessWidget {
     return Column(
       children: [
         Row(
-          children: headers.map((e) => Expanded(
-            child: Text(e, style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),),
+          children: headers.map((day) => Expanded(
+            child: Text(day, style: mainTheme.textTheme.bodyMedium, textAlign: TextAlign.center),
           )).toList(),
         ),
         Expanded(
@@ -75,14 +72,5 @@ class GridTrackerView extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class GridTracker extends StatelessWidget {
-  const GridTracker({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('hellp');
   }
 }
