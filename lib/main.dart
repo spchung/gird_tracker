@@ -4,6 +4,7 @@ import 'package:lets_git_it/theme.dart';
 import 'package:lets_git_it/service/app.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:lets_git_it/view/gird_tracker.dart';
+import 'package:lets_git_it/routes.dart';
 
 void main() {
   locatorSetUp();
@@ -16,10 +17,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
+    return MaterialApp.router(
+      title: 'Git It',
+      // locale: provider.locale,
+      // localizationsDelegates: AppLocalizations.localizationsDelegates,
+      // supportedLocales: AppLocalizations.supportedLocales,
       theme: mainTheme,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routerConfig: appRouter,
     );
   }
 }

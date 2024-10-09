@@ -23,7 +23,7 @@ class GridTrackerView extends StatelessWidget {
     final placeholderCount = firstDay! - 1;
 
     for (var i = 0; i < placeholderCount; i++) {
-      newData.insert(i, LoggedWorkout(isPlaceholder: true, dateTime: null, workout: null));
+      newData.insert(i, LoggedWorkout.placeholder());
     }
 
     return newData;

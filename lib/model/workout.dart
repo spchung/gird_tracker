@@ -10,6 +10,8 @@ class LoggedWorkout {
     required this.workout,
     this.isPlaceholder = false,
   });
+
+  LoggedWorkout.placeholder() : isPlaceholder = true;
 }
 
 class Workout {
