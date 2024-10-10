@@ -20,7 +20,11 @@ class HomeNavigator extends StatelessWidget with WatchItMixin {
       appBar: AppBar(
         title: const Text('Workout Tracker'),
       ),
-      body: _widgetOptions.elementAt(index.value),
+      // use indexStack to keep page state in memory and switch between them
+      body: IndexedStack(
+        index: index.value,
+        children: _widgetOptions,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         unselectedLabelStyle: const TextStyle(
