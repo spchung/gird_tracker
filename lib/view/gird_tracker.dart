@@ -1,10 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:lets_git_it/locator.dart';
-import 'package:lets_git_it/service/logged_workout.dart';
+import 'package:lets_git_it/service/sessions.dart';
 import 'package:lets_git_it/theme.dart';
-import 'package:lets_git_it/model/workout.dart';
-import 'package:lets_git_it/view/temp_data.dart';
+import 'package:lets_git_it/model/session.dart';
 
 const headers = [
   'Mon',
@@ -24,24 +23,24 @@ class GridTrackerView extends StatefulWidget {
 }
 
 class _GridTrackerViewState extends State<GridTrackerView> {
-  late Future<List<LoggedWorkout>> _workoutData;
+  late Future<List<Session>> _workoutData;
+  late SessionsService _sessionService;
 
   @override
   void initState() {
     super.initState();
-    // Get the WorkoutService instance and fetch data
-    final workoutService = sl.get<LoggedWorkoutService>();
-    _workoutData = workoutService.fetchLoggedWorkouts();
+    _sessionService = sl.get<SessionsService>();
+    _workoutData = _sessionService.fetchLoggedWorkouts();
   }
 
-  List<LoggedWorkout> preProcessLoggedWorkout(List<LoggedWorkout> data) {
+  List<Session> preProcessLoggedWorkout(List<Session> data) {
     // find the day of week of the first day
-    var newData = List<LoggedWorkout>.from(data);
+    var newData = List<Session>.from(data);
     final firstDay = data.first.dateTime?.weekday;
     final placeholderCount = firstDay! - 1;
 
     for (var i = 0; i < placeholderCount; i++) {
-      newData.insert(i, LoggedWorkout.placeholder());
+      newData.insert(i, Session.placeholder());
     }
 
     return newData;
@@ -49,15 +48,15 @@ class _GridTrackerViewState extends State<GridTrackerView> {
 
   @override
   Widget build(BuildContext context){
-    return FutureBuilder<List<LoggedWorkout>>(
+    return FutureBuilder<List<Session>>(
       future: _workoutData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No workouts found.'));
+          return const Center(child: Text('No workouts found.'));
         }
         final workouts = snapshot.data!;
         final data = preProcessLoggedWorkout(workouts);
@@ -71,8 +70,29 @@ class _GridTrackerViewState extends State<GridTrackerView> {
               color: Colors.grey[700],
               child: WrokoutStatGrid(data: data)
             ),
-            Text('Outer Column - Child 1'),
-            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                final workoutService = sl.get<SessionsService>();
+                workoutService.addLoggedWorkout(
+                  Session(
+                    dateTime: DateTime.now(),
+                    workoutGroupId: 2,
+                  ),
+                );
+                setState(() {
+                  _workoutData = workoutService.fetchLoggedWorkouts();
+                });
+              },
+              child: Text("log new workout")
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final sessionService = sl.get<SessionsService>();
+                final session = sessionService.getData(3);
+                session.then((value) => print(value.workoutGroupName));
+              }, 
+              child: Text("Get workout")
+            )
           ],
         );
       }
@@ -86,7 +106,7 @@ class WrokoutStatGrid extends StatelessWidget {
     required this.data,
   });
 
-  final List<LoggedWorkout> data;
+  final List<Session> data;
 
   @override
   Widget build(BuildContext context) {
@@ -148,12 +168,13 @@ class WrokoutStatGrid extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
-                    color: data[index].workout!.color,
+                    color: Colors.blue,
                     borderRadius: BorderRadius.circular(99),
                   ),
                   child: Center(
                     child: Text(
-                      data[index].workout!.name,
+                      // data[index].workout!.name,
+                      'TEMP',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white,

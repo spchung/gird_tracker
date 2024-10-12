@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 // import 'package:watch_it/watch_it.dart';
 
-
+// TEMPORARY DATA
 class AppModel extends ChangeNotifier {
   final counter = ValueNotifier<int>(0);
 
