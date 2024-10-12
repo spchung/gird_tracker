@@ -4,9 +4,9 @@ import 'package:lets_git_it/service/db.dart';
 import 'package:lets_git_it/locator.dart';
 
 class SessionsService extends ChangeNotifier {
-  final _data = ValueNotifier<List<Session>>([]);
+  final _sessions = ValueNotifier<List<Session>>([]);
 
-  ValueNotifier<List<Session>> get data => _data;
+  ValueNotifier<List<Session>> get sessions => _sessions;
 
   Future<List<Session>> fetchLoggedWorkouts() async {
     var db = await sl.get<DatabaseHelper>().database;
@@ -15,14 +15,14 @@ class SessionsService extends ChangeNotifier {
       FROM sessions
       JOIN workout_groups ON sessions.workout_group_id = workout_groups.id
     ''');
-    _data.value = res.map((e) => Session.fromMap(e)).toList();
-    return _data.value;
+    _sessions.value = res.map((e) => Session.fromMap(e)).toList();
+    return _sessions.value;
   }
 
   void addLoggedWorkout(Session session) async {
     var db = await sl.get<DatabaseHelper>().database;
     db.insert('sessions', session.toMap());
-    _data.value = [..._data.value, session];
+    _sessions.value = [..._sessions.value, session];
     notifyListeners();
   }
 

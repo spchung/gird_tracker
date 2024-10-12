@@ -96,21 +96,21 @@ class _InnerGridState extends State<InnerGrid> {
   void initState() {
     super.initState();
     _sessionService = sl.get<SessionsService>();
-    _workoutData = _sessionService.data.value;
+    _workoutData = _sessionService.sessions.value;
     // listener to refresh UI when data changes
-    _sessionService.data.addListener(_updateWorkouts);
+    _sessionService.sessions.addListener(_updateWorkouts);
     _sessionService.fetchLoggedWorkouts();
   }
 
   void _updateWorkouts() {
     setState(() {
-      _workoutData = _sessionService.data.value;
+      _workoutData = _sessionService.sessions.value;
     });
   }
 
   @override
   void dispose() {
-    _sessionService.data.removeListener(_updateWorkouts);
+    _sessionService.sessions.removeListener(_updateWorkouts);
     super.dispose();
   }
 
