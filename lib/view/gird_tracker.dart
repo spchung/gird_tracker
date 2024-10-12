@@ -49,7 +49,6 @@ class _GridTrackerViewState extends State<GridTrackerView> {
 
   @override
   Widget build(BuildContext context){
-    
     return FutureBuilder<List<LoggedWorkout>>(
       future: _workoutData,
       builder: (context, snapshot) {
@@ -77,20 +76,6 @@ class _GridTrackerViewState extends State<GridTrackerView> {
           ],
         );
       }
-      // child: Column(
-      //   mainAxisAlignment: MainAxisAlignment.start,
-      //   crossAxisAlignment: CrossAxisAlignment.center,
-      //   children: [
-      //     Material(
-      //       borderRadius: BorderRadius.circular(10),
-      //       elevation: 2,
-      //       color: Colors.grey[700],
-      //       child: WrokoutStatGrid(data: data)
-      //     ),
-      //     Text('Outer Column - Child 1'),
-      //     SizedBox(height: 20),
-      //   ],
-      // ),
     );
   }
 }
@@ -118,14 +103,8 @@ class WrokoutStatGrid extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Activity Summary',
-                      style: mainTheme.textTheme.bodyLarge,
-                    ),
-                    Text(
-                      'Jan 1 - Jan 7',
-                      style: mainTheme.textTheme.bodyMedium,
-                    ),
+                    Text('Activity Summary', style: mainTheme.textTheme.bodyLarge,),
+                    Text('Jan 1 - Jan 7',style: mainTheme.textTheme.bodyMedium,),
                   ],
                 ),
               ),
@@ -139,9 +118,12 @@ class WrokoutStatGrid extends StatelessWidget {
             ],
           ),
         ),
-        Row(
+        // Data Dash
+        const Row(
           children: [
-
+            Expanded(child:Text("Data1", textAlign: TextAlign.center,)),
+            Expanded(child:Text("Data2", textAlign: TextAlign.center,)),
+            Expanded(child:Text("Data3", textAlign: TextAlign.center,)),
           ],
         ),
         // headers
