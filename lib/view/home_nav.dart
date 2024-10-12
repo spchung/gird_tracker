@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lets_git_it/locator.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:lets_git_it/view/gird_tracker.dart';
+import 'package:lets_git_it/view/home.dart';
 import 'package:lets_git_it/service/tab_navigator.dart';
 
 class HomeNavigator extends StatelessWidget with WatchItMixin {
   const HomeNavigator({super.key});
 
   static const  List<Widget> _widgetOptions = <Widget>[
-    GridTrackerView(),
+    HomeView(),
     Text('Index 1: Business'),
     Text('Index 2: School'),
   ];

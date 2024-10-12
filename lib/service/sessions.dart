@@ -6,11 +6,9 @@ import 'package:lets_git_it/locator.dart';
 class SessionsService extends ChangeNotifier {
   final _data = ValueNotifier<List<Session>>([]);
 
-  List<Session> get data => _data.value;
+  ValueNotifier<List<Session>> get data => _data;
 
   Future<List<Session>> fetchLoggedWorkouts() async {
-    // await Future.delayed(const Duration(seconds: 1));
-    // return tempData;
     var db = await sl.get<DatabaseHelper>().database;
     var res = await db.rawQuery('''
       SELECT sessions.id, sessions.dateTime, sessions.workout_group_id, workout_groups.name

@@ -4,7 +4,7 @@ import 'package:lets_git_it/service/db.dart';
 import 'package:lets_git_it/theme.dart';
 import 'package:lets_git_it/service/app.dart';
 import 'package:watch_it/watch_it.dart';
-import 'package:lets_git_it/view/gird_tracker.dart';
+import 'package:lets_git_it/view/home.dart';
 import 'package:lets_git_it/routes.dart';
 
 
@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Flutter Demo Home Page'),
       ),
-      body: GridTrackerView(),
+      body: HomeView(),
     );
   }
 }

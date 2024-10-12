@@ -15,26 +15,106 @@ const headers = [
   'Sun',
 ];
 
-class GridTrackerView extends StatefulWidget {
-  const GridTrackerView({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
-  State<GridTrackerView> createState() => _GridTrackerViewState();
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: GridContainer(),
+    );
+  }
 }
 
-class _GridTrackerViewState extends State<GridTrackerView> {
-  late Future<List<Session>> _workoutData;
+class LoggerInterface extends StatelessWidget {
+  const LoggerInterface({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            final workoutService = sl.get<SessionsService>();
+            workoutService.addLoggedWorkout(
+              Session(
+                dateTime: DateTime.now(),
+                workoutGroupId: 2,
+              ),
+            );
+          },
+          child: Text("log new workout")
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            final sessionService = sl.get<SessionsService>();
+            final session = sessionService.getData(3);
+            session.then((value) => print(value.workoutGroupName));
+          }, 
+          child: Text("Get workout")
+        )
+      ],
+    );
+  }
+}
+
+class GridContainer extends StatelessWidget {
+  const GridContainer({super.key});
+
+  @override
+  Widget build(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Material(
+          borderRadius: BorderRadius.circular(10),
+          elevation: 2,
+          color: Colors.grey[700],
+          child: const InnerGrid()
+        ),
+        const LoggerInterface()
+      ],
+    );
+  }
+}
+
+class InnerGrid extends StatefulWidget {
+  const InnerGrid({
+    super.key,
+  });
+
+  @override
+  State<InnerGrid> createState() => _InnerGridState();
+}
+
+class _InnerGridState extends State<InnerGrid> {
+  late List<Session> _workoutData;
   late SessionsService _sessionService;
 
   @override
   void initState() {
     super.initState();
     _sessionService = sl.get<SessionsService>();
-    _workoutData = _sessionService.fetchLoggedWorkouts();
+    _workoutData = _sessionService.data.value;
+    // listener to refresh UI when data changes
+    _sessionService.data.addListener(_updateWorkouts);
+    _sessionService.fetchLoggedWorkouts();
+  }
+
+  void _updateWorkouts() {
+    setState(() {
+      _workoutData = _sessionService.data.value;
+    });
+  }
+
+  @override
+  void dispose() {
+    _sessionService.data.removeListener(_updateWorkouts);
+    super.dispose();
   }
 
   List<Session> preProcessLoggedWorkout(List<Session> data) {
-    // find the day of week of the first day
     var newData = List<Session>.from(data);
     final firstDay = data.first.dateTime?.weekday;
     final placeholderCount = firstDay! - 1;
@@ -42,78 +122,21 @@ class _GridTrackerViewState extends State<GridTrackerView> {
     for (var i = 0; i < placeholderCount; i++) {
       newData.insert(i, Session.placeholder());
     }
-
     return newData;
   }
 
   @override
-  Widget build(BuildContext context){
-    return FutureBuilder<List<Session>>(
-      future: _workoutData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No workouts found.'));
-        }
-        final workouts = snapshot.data!;
-        final data = preProcessLoggedWorkout(workouts);
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Material(
-              borderRadius: BorderRadius.circular(10),
-              elevation: 2,
-              color: Colors.grey[700],
-              child: WrokoutStatGrid(data: data)
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final workoutService = sl.get<SessionsService>();
-                workoutService.addLoggedWorkout(
-                  Session(
-                    dateTime: DateTime.now(),
-                    workoutGroupId: 2,
-                  ),
-                );
-                setState(() {
-                  _workoutData = workoutService.fetchLoggedWorkouts();
-                });
-              },
-              child: Text("log new workout")
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final sessionService = sl.get<SessionsService>();
-                final session = sessionService.getData(3);
-                session.then((value) => print(value.workoutGroupName));
-              }, 
-              child: Text("Get workout")
-            )
-          ],
-        );
-      }
-    );
-  }
-}
-
-class WrokoutStatGrid extends StatelessWidget {
-  const WrokoutStatGrid({
-    super.key,
-    required this.data,
-  });
-
-  final List<Session> data;
-
-  @override
   Widget build(BuildContext context) {
+    if (_workoutData.isEmpty) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    final paddedData = preProcessLoggedWorkout(_workoutData);
     return Column(
-      mainAxisSize: MainAxisSize.min, // Inner column only takes height of children
+      mainAxisSize: MainAxisSize.min,
       children: [
-        // Activity Summary
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
@@ -160,9 +183,9 @@ class WrokoutStatGrid extends StatelessWidget {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
             ),
-            itemCount: data.length,
+            itemCount: paddedData.length,
             itemBuilder: (context, index) {
-              if (data[index].isPlaceholder == true) {
+              if (paddedData[index].isPlaceholder == true) {
                 return const SizedBox();
               } else {
                 return Container(
@@ -171,11 +194,11 @@ class WrokoutStatGrid extends StatelessWidget {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(99),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       // data[index].workout!.name,
                       'TEMP',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         color: Colors.white,
                       ),
@@ -185,8 +208,8 @@ class WrokoutStatGrid extends StatelessWidget {
               }
             },
           ),
-        ),
-      ],
+        )
+      ]
     );
   }
 }
