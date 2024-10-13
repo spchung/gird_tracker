@@ -1,6 +1,10 @@
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:lets_git_it/locator.dart';
+import 'package:lets_git_it/model/exercise.dart';
+import 'package:lets_git_it/service/exercise.dart';
 import 'package:lets_git_it/service/sessions.dart';
 import 'package:lets_git_it/service/workout_group.dart';
 import 'package:lets_git_it/theme.dart';
@@ -33,8 +37,10 @@ class HomeView extends StatelessWidget {
           color: colorGrid[4],
           child: const InnerGrid()
         ),
-        const SizedBox(height: 5),
-        const LoggerInterface()
+        // const SizedBox(height: 5),
+        const Spacer(),
+        const LoggerInterface(),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -48,17 +54,36 @@ class LoggerInterface extends StatefulWidget {
 }
 
 class _LoggerInterfaceState extends State<LoggerInterface> {
-  String? _selectedWorkoutGroup;
+  // String? _selectedWorkoutGroup;
+  final ValueNotifier<IdNameModel?> _selectedWorkoutGroup = ValueNotifier<IdNameModel?>(null);
+  List<Exercise>? _exercises;
+  List<IdNameModel>? _workoutGroups;
 
-  List<IdNameModel> _workoutGroups = [];
 
   @override
   void initState() {
     super.initState();
-    final workoutGroupService = sl.get<WorkoutGroupService>();
-    workoutGroupService.fetchWorkoutGroups().then((value) {
+    sl.get<WorkoutGroupService>().fetchWorkoutGroups()
+      .then((value) {
+          setState(() {
+          _workoutGroups = value.map((e) => IdNameModel(id: e.id.toString(), name: e.name)).toList();
+        });
+      }
+    );
+
+    _selectedWorkoutGroup.addListener(() {
+      // print(_selectedWorkoutGroup.value);
+      // update exercises
+      if (_selectedWorkoutGroup.value == null) {
+        return;
+      }
       setState(() {
-        _workoutGroups = value.map((e) => IdNameModel(id: e.id.toString(), name: e.name)).toList();
+        sl.get<ExerciseService>().fetchExercisesByGroupId(_selectedWorkoutGroup.value!.id)
+          .then((value) {
+            setState(() {
+              _exercises = value;
+            });
+          });
       });
     });
   }
@@ -71,26 +96,62 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
         borderRadius: BorderRadius.circular(10),
         color: colorGrid[4],
       ),
-      child: Column(
+      child: Row(
         children: [
-          LabelDropDownButton(
-            label: "Workout Group",
-            options: _workoutGroups,
-            onChanged: (String? value) {
-              setState(() {
-                _selectedWorkoutGroup = value;
-              });
-            }, 
-            enabled: true, 
-            placeholderText: "Select Group",
+          Expanded(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: LabelDropDownButton(
+                      label: "Workout Group",
+                      options: _workoutGroups ?? [],
+                      onChanged: (IdNameModel? value) {
+                        setState(() {
+                          _selectedWorkoutGroup.value = value;
+                        });
+                      }, 
+                      enabled: true, 
+                      placeholderText: "Select Group",
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final sessionService = sl.get<SessionsService>();
+                      final session = sessionService.getData(3);
+                      session.then((value) => print(value.workoutGroupName));
+                    }, 
+                    child: const Text("Log Workout"),
+                  )
+                ],
+              ),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final sessionService = sl.get<SessionsService>();
-              final session = sessionService.getData(3);
-              session.then((value) => print(value.workoutGroupName));
-            }, 
-            child: Text("Get workout")
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: colorGrid[5],
+                ),
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _exercises?.map((e) => Text(
+                        e.name,
+                        textAlign: TextAlign.start,
+                      )).toList() ?? const [],
+                    ),
+                  ),
+                ),
+              ),
+            )
           )
         ],
       ),
@@ -194,9 +255,9 @@ class _InnerGridState extends State<InnerGrid> {
             child: Text(day,style: mainTheme.textTheme.bodyMedium,textAlign: TextAlign.center),
           )).toList(),
         ),
-        // grid (Use SizedBox to give fixed height)
         SizedBox(
-          height: 320,  // You can adjust this value as needed
+          // height: 320,  
+          height: MediaQuery.of(context).size.height * 0.33,
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

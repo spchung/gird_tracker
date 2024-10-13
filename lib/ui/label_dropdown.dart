@@ -16,7 +16,7 @@ class LabelDropDownButton extends StatelessWidget {
   });
 
   final List<IdNameModel> options;
-  final Function(String?) onChanged;
+  final Function(IdNameModel?) onChanged;
   final String placeholderText;
   final String label;
   final bool enabled;

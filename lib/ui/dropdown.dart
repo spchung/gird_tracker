@@ -14,7 +14,7 @@ class SDropDownButton extends StatefulWidget {
   });
 
   final List<IdNameModel> options;
-  final Function(String?) onChanged;
+  final Function(IdNameModel?) onChanged;
   final String placeholderText;
   final bool enabled;
   final bool isMissing;
@@ -26,13 +26,14 @@ class SDropDownButton extends StatefulWidget {
 
 class _SDropDownButtonState extends State<SDropDownButton> {
 
-  String? selectedValue;
+  // String? selectedValue;
+  IdNameModel? selectedValue;
   bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
+      child: DropdownButton2<IdNameModel>(
         isExpanded: true,
         hint: Text(
           widget.isMissing ? widget.missingMsg ?? widget.placeholderText : widget.placeholderText,
@@ -40,14 +41,15 @@ class _SDropDownButtonState extends State<SDropDownButton> {
             color: widget.isMissing && widget.missingMsg != null ? const Color.fromRGBO(155, 5, 30, 1) : const Color.fromRGBO(77, 77, 77, 1),
           ),
         ),
-        items: widget.options.map((IdNameModel item) => DropdownMenuItem<String>(value: item.name,
+        items: widget.options.map((IdNameModel item) => DropdownMenuItem<IdNameModel>(
+          value: item,
           enabled: widget.enabled,
           child: Text(
             item.name,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.black),
           ),
         )).toList(),
-        onChanged: (String? value) {
+        onChanged: (IdNameModel? value) {
           setState(() {
             selectedValue = value;
             widget.onChanged(value);
