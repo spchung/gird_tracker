@@ -2,9 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:lets_git_it/locator.dart';
 import 'package:lets_git_it/service/sessions.dart';
+import 'package:lets_git_it/service/workout_group.dart';
 import 'package:lets_git_it/theme.dart';
 import 'package:lets_git_it/model/session.dart';
-
+import 'package:lets_git_it/ui/dropdown.dart';
+import 'package:lets_git_it/model/shared.dart';
+import 'package:lets_git_it/ui/label_dropdown.dart';
 const headers = [
   'Mon',
   'Tue',
@@ -19,49 +22,6 @@ class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: GridContainer(),
-    );
-  }
-}
-
-class LoggerInterface extends StatelessWidget {
-  const LoggerInterface({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            final workoutService = sl.get<SessionsService>();
-            workoutService.addLoggedWorkout(
-              Session(
-                dateTime: DateTime.now(),
-                workoutGroupId: 2,
-              ),
-            );
-          },
-          child: Text("log new workout")
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final sessionService = sl.get<SessionsService>();
-            final session = sessionService.getData(3);
-            session.then((value) => print(value.workoutGroupName));
-          }, 
-          child: Text("Get workout")
-        )
-      ],
-    );
-  }
-}
-
-class GridContainer extends StatelessWidget {
-  const GridContainer({super.key});
-
-  @override
   Widget build(BuildContext context){
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -70,11 +30,70 @@ class GridContainer extends StatelessWidget {
         Material(
           borderRadius: BorderRadius.circular(10),
           elevation: 2,
-          color: Colors.grey[700],
+          color: colorGrid[4],
           child: const InnerGrid()
         ),
+        const SizedBox(height: 5),
         const LoggerInterface()
       ],
+    );
+  }
+}
+
+class LoggerInterface extends StatefulWidget {
+  const LoggerInterface({super.key});
+
+  @override
+  State<LoggerInterface> createState() => _LoggerInterfaceState();
+}
+
+class _LoggerInterfaceState extends State<LoggerInterface> {
+  String? _selectedWorkoutGroup;
+
+  List<IdNameModel> _workoutGroups = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final workoutGroupService = sl.get<WorkoutGroupService>();
+    workoutGroupService.fetchWorkoutGroups().then((value) {
+      setState(() {
+        _workoutGroups = value.map((e) => IdNameModel(id: e.id.toString(), name: e.name)).toList();
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: colorGrid[4],
+      ),
+      child: Column(
+        children: [
+          LabelDropDownButton(
+            label: "Workout Group",
+            options: _workoutGroups,
+            onChanged: (String? value) {
+              setState(() {
+                _selectedWorkoutGroup = value;
+              });
+            }, 
+            enabled: true, 
+            placeholderText: "Select Group",
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final sessionService = sl.get<SessionsService>();
+              final session = sessionService.getData(3);
+              session.then((value) => print(value.workoutGroupName));
+            }, 
+            child: Text("Get workout")
+          )
+        ],
+      ),
     );
   }
 }
