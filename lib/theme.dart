@@ -15,6 +15,14 @@ var colorGrid = <Color>[
   const Color(0xFFE03F8A) // Pantone 18-2045 Pink Peacock
 ];
 
+var lightThemePalette = <String, Color> {
+  'primary': const Color(0xFF000000),
+  'secondary': const Color(0xFFFFFFFF),
+  'background': const Color(0xFF91766E), // brown
+  'onPrimary': const Color(0xFFB7A7A9), // Granite
+  'onSecondary': const Color(0xFFF6ECE3), //beigt
+};
+
 var mainTheme = ThemeData(
   brightness: Brightness.dark,
   primarySwatch: Colors.blue,

@@ -30,7 +30,8 @@ class HomeView extends StatelessWidget {
         Material(
           borderRadius: BorderRadius.circular(10),
           elevation: 2,
-          color: colorGrid[4],
+          // color: colorGrid[4],
+          color: lightThemePalette['background'],
           child: const InnerGrid()
         ),
         // const SizedBox(height: 5),
@@ -68,8 +69,6 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
     );
 
     _selectedWorkoutGroup.addListener(() {
-      // print(_selectedWorkoutGroup.value);
-      // update exercises
       if (_selectedWorkoutGroup.value == null) {
         return;
       }
@@ -90,7 +89,7 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: colorGrid[4],
+        color: lightThemePalette['background'],
       ),
       child: Row(
         children: [
@@ -146,7 +145,7 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: colorGrid[5],
+                  color: lightThemePalette['onSecondary'],
                 ),
                 height: MediaQuery.of(context).size.height * 0.3,
                 child: Padding(
@@ -155,10 +154,7 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
                     scrollDirection: Axis.vertical,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _exercises?.map((e) => Text(
-                        e.name,
-                        textAlign: TextAlign.start,
-                      )).toList() ?? const [],
+                      children: _exercises?.map((e) => ExerciseCheckbox(exercise: e,)).toList() ?? const [],
                     ),
                   ),
                 ),
@@ -167,6 +163,26 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
           )
         ],
       ),
+    );
+  }
+}
+
+class ExerciseCheckbox extends StatelessWidget {
+  const ExerciseCheckbox({
+    super.key,
+    required this.exercise
+  });
+
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      exercise.name,
+      style: mainTheme.textTheme.bodyMedium?.copyWith(
+        color: lightThemePalette['primary'],
+      ),
+      textAlign: TextAlign.start,
     );
   }
 }
@@ -277,22 +293,29 @@ class _InnerGridState extends State<InnerGrid> {
             ),
             itemCount: paddedData.length,
             itemBuilder: (context, index) {
-              if (paddedData[index].isPlaceholder == true) {
+              final loggedWorkout = paddedData[index];
+              if (loggedWorkout.isPlaceholder == true) {
+                // rest day 
                 return const SizedBox();
               } else {
+                // workout day
                 return Container(
                   margin: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: lightThemePalette['onSecondary'],
                     borderRadius: BorderRadius.circular(99),
                   ),
-                  child: const Center(
-                    child: Text(
-                      // data[index].workout!.name,
-                      'TEMP',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
+                  child: Center(
+                    child: InkWell(
+                      onTap: () => print(loggedWorkout.workoutGroupName),
+                      child: Text(
+                        // data[index].workout!.name,
+                        loggedWorkout.workoutGroupName ?? '',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: lightThemePalette['primary'],
+                          // color: Colors.black
+                        ),
                       ),
                     ),
                   ),
