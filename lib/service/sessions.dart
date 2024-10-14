@@ -29,7 +29,7 @@ class SessionsService extends ChangeNotifier {
   Future<Session> getData(int id) async {
     var db = await sl.get<DatabaseHelper>().database;
     var res = await db.rawQuery('''
-      SELECT sessions.id, sessions.dateTime, sessions.workout_group_id, workout_groups.name
+      SELECT sessions.id, sessions.dateTime, sessions.workout_group_id, workout_groups.name, sessions.exercises
       FROM sessions
       JOIN workout_groups ON sessions.workout_group_id = workout_groups.id
       WHERE sessions.id = $id

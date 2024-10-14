@@ -1,6 +1,3 @@
-
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:lets_git_it/locator.dart';
 import 'package:lets_git_it/model/exercise.dart';
@@ -9,7 +6,6 @@ import 'package:lets_git_it/service/sessions.dart';
 import 'package:lets_git_it/service/workout_group.dart';
 import 'package:lets_git_it/theme.dart';
 import 'package:lets_git_it/model/session.dart';
-import 'package:lets_git_it/ui/dropdown.dart';
 import 'package:lets_git_it/model/shared.dart';
 import 'package:lets_git_it/ui/label_dropdown.dart';
 const headers = [
@@ -119,10 +115,26 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
                   ElevatedButton(
                     onPressed: () async {
                       final sessionService = sl.get<SessionsService>();
-                      final session = sessionService.getData(3);
-                      session.then((value) => print(value.workoutGroupName));
+                      sessionService.addLoggedWorkout(
+                        Session(
+                          dateTime: DateTime.now(),
+                          workoutGroupId: 1,
+                        )
+                      );
                     }, 
                     child: const Text("Log Workout"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final sessionService = sl.get<SessionsService>();
+                      final sess = await sessionService.getData(21);
+                      print(sess.workoutGroupName);
+                      sess.exercises?.forEach((element) {
+                        print(element.name);
+                      });
+
+                    }, 
+                    child: const Text("read Workout"),
                   )
                 ],
               ),
