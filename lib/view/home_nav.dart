@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lets_git_it/locator.dart';
+import 'package:lets_git_it/view/test.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:lets_git_it/view/home.dart';
 import 'package:lets_git_it/service/tab_navigator.dart';
@@ -9,7 +10,7 @@ class HomeNavigator extends StatelessWidget with WatchItMixin {
 
   static const  List<Widget> _widgetOptions = <Widget>[
     HomeView(),
-    Text('Index 1: Business'),
+    VerticalStackScrollView(),
     Text('Index 2: School'),
   ];
 
