@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Flutter Demo Home Page'),
       ),
-      body: HomeView(),
+      body: const HomeView(),
     );
   }
 }

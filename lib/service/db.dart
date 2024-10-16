@@ -28,17 +28,24 @@ class DatabaseHelper {
       -- logged workout sessiongs
       CREATE TABLE sessions(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        exercise_id INTEGER,
-        datetime TEXT
+        workout_group_id INTEGER,
+        datetime TEXT,
+        exercises TEXT
       );
-
+      '''
+    );
+    await db.execute(
+      '''
       -- arbitrary grouping of workouts
-      CREATE TABLE workout_group(
+      CREATE TABLE workout_groups(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name VARCHAR,
         description TEXT
       );
-      
+      '''
+    );
+    await db.execute(
+    '''
       -- exetcise, arbitrary name, description, and grouping
       CREATE TABLE exercises(
         id INTEGER PRIMARY KEY AUTOINCREMENT,

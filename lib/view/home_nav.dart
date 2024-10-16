@@ -4,23 +4,21 @@ import 'package:lets_git_it/view/test.dart';
 import 'package:watch_it/watch_it.dart';
 import 'package:lets_git_it/view/home.dart';
 import 'package:lets_git_it/service/tab_navigator.dart';
+import 'package:lets_git_it/view/add_exercise_view.dart';
 
 class HomeNavigator extends StatelessWidget with WatchItMixin {
   const HomeNavigator({super.key});
 
   static const  List<Widget> _widgetOptions = <Widget>[
     HomeView(),
+    AddExerciseView(),
     VerticalStackScrollView(),
-    Text('Index 2: School'),
   ];
 
   @override
   Widget build(BuildContext context) {
     var index = watch(sl<TabNavigator>().index);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Workout Tracker'),
-      ),
       // use indexStack to keep page state in memory and switch between them
       body: IndexedStack(
         index: index.value,

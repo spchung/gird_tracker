@@ -67,8 +67,8 @@ class _VerticalStackScrollViewState extends State<VerticalStackScrollView> {
                               style: TextStyle(color: Colors.white))),
                     ),
                     if (!isStacked)
-                      Expanded(
-                        child: const Center(
+                      const Expanded(
+                        child: Center(
                             child: Text("Widget 1 Content",
                                 style: TextStyle(color: Colors.white))),
                       ),
@@ -91,11 +91,13 @@ class _VerticalStackScrollViewState extends State<VerticalStackScrollView> {
                           child: Text("Widget 2 Header",
                               style: TextStyle(color: Colors.white))),
                     ),
-                    if (!isStacked)
-                      Expanded(
-                        child: const Center(
-                            child: Text("Widget 2 Content",
-                                style: TextStyle(color: Colors.white))),
+                    if (!isStacked) const Expanded(
+                        child: Center(
+                            child: Text(
+                              "Widget 2 Content",
+                              style: TextStyle(color: Colors.white)
+                            )
+                          ),
                       ),
                   ],
                 ),
@@ -110,5 +112,5 @@ class _VerticalStackScrollViewState extends State<VerticalStackScrollView> {
 }
 
 void main() {
-  runApp(MaterialApp(home: VerticalStackScrollView()));
+  runApp(const MaterialApp(home: VerticalStackScrollView()));
 }

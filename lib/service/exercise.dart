@@ -15,4 +15,9 @@ class ExerciseService {
     var res = await db.query('exercises', where: 'workout_group_id = ?', whereArgs: [workoutGroupId]);
     return res.map((e) => Exercise.fromMap(e)).toList();
   }
+
+  Future<void> addExercise(Exercise exercise) async {
+    var db = await sl.get<DatabaseHelper>().database;
+    await db.insert('exercises', exercise.toMap());
+  }
 }

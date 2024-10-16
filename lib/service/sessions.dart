@@ -21,7 +21,12 @@ class SessionsService extends ChangeNotifier {
 
   void addLoggedWorkout(Session session) async {
     var db = await sl.get<DatabaseHelper>().database;
-    db.insert('sessions', session.toMap());
+    try {
+      db.insert('sessions', session.toMap());
+    }
+    catch (e) {
+      print(e);
+    }
     _sessions.value = [..._sessions.value, session];
     notifyListeners();
   }

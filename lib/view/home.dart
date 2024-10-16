@@ -23,22 +23,28 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Material(
-          borderRadius: BorderRadius.circular(10),
-          elevation: 2,
-          // color: colorGrid[4],
-          color: lightThemePalette['background'],
-          child: const InnerGrid()
-        ),
-        // const SizedBox(height: 5),
-        const Spacer(),
-        const LoggerInterface(),
-        const SizedBox(height: 10),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 10,
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Material(
+            borderRadius: BorderRadius.circular(10),
+            elevation: 2,
+            // color: colorGrid[4],
+            color: lightThemePalette['background'],
+            child: const InnerGrid()
+          ),
+          // const SizedBox(height: 5),
+          // const Spacer(),
+          const SizedBox(height: 10),
+          const LoggerInterface(),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }
@@ -95,7 +101,7 @@ class _LoggerInterfaceState extends State<LoggerInterface> {
         children: [
           Expanded(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.33,
               child: Column(
                 children: [
                   Expanded(
@@ -285,7 +291,7 @@ class _InnerGridState extends State<InnerGrid> {
         ),
         SizedBox(
           // height: 320,  
-          height: MediaQuery.of(context).size.height * 0.33,
+          height: MediaQuery.of(context).size.height * 0.35,
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
