@@ -4,9 +4,17 @@ import 'package:lets_git_it/model/exercise.dart';
 import 'package:lets_git_it/service/exercise.dart';
 import 'package:lets_git_it/theme.dart';
 import 'package:lets_git_it/view/temp.dart';
+import 'package:lets_git_it/view/test_swipe_to_reveal.dart';
 
-class AddExerciseView extends StatelessWidget {
-  const AddExerciseView({super.key});
+/*
+0-left: AutoCompleteTextField to search for exercises
+0-right : Add new exercise button
+1: List of exercises
+ - 1.1-left: Exercise name
+  - 1.1-right: Edit exercise button
+*/ 
+class EditExerciseView extends StatelessWidget {
+  const EditExerciseView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +22,21 @@ class AddExerciseView extends StatelessWidget {
       extendBodyBehindAppBar: false,
       appBar: AppBar(
         backgroundColor: lightThemePalette['onBackground'],
-        title: const Text('Add Exercise'),
+        title: const Text('Edit Exercises & Groups'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
+              decoration: BoxDecoration(
+                color: lightThemePalette['background'],
+                borderRadius: BorderRadius.circular(10),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              child: AddExerciseForm(),
+              child: const AddExerciseForm(),
             ),
             // AddGroupBody(),
+            FlutterSlidable(),
           ],
         ),
       ),
@@ -31,6 +44,26 @@ class AddExerciseView extends StatelessWidget {
   }
 }
 
+// swipe to reveal edit and trash icon
+class ExerciseRow extends StatelessWidget {
+  const ExerciseRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text('Exercise Name'),
+        ElevatedButton(
+          onPressed: () {},
+          child: const Text('Edit'),
+        ),
+      ],
+    );
+  }
+}
+
+
+// this should be in a pop up
 class AddExerciseForm extends StatefulWidget {
   const AddExerciseForm({super.key});
 
@@ -109,13 +142,11 @@ class AddGroupBody extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: lightThemePalette['background'],
         ),
-        child: Column(
+        child: const Column(
           children: [
             Center(child: Text('group')),
-            // input field 
             FormExample(),
             FormExample(),
-            
           ],
         ),
       ),
